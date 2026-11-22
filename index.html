@@ -1,0 +1,25 @@
+<!DOCTYPE html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Tính giờ ngủ</title><style>
+:root{--bg:#fafafa;--fg:#1d1d22;--c:#fff;--bd:#dcdce2;--ac:#5b5bd6;--mu:#6b6b78;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#15151a;--fg:#ececf1;--c:#1f1f27;--bd:#33333d;--ac:#8b8bf0;--mu:#9a9aa8}}
+:root[data-theme="dark"]{--bg:#15151a;--fg:#ececf1;--c:#1f1f27;--bd:#33333d;--ac:#8b8bf0;--mu:#9a9aa8}
+html,body{height:100%;margin:0}body{background:var(--bg);color:var(--fg);font:16px system-ui,sans-serif;display:flex;justify-content:center}
+main{width:100%;max-width:440px;padding:20px 16px}h1{font-size:22px;margin:0 0 4px}p{color:var(--mu);margin:0 0 16px}
+.tabs{display:flex;gap:8px;margin-bottom:14px}.tabs button{flex:1;padding:10px;border:1px solid var(--bd);background:var(--c);color:var(--fg);border-radius:10px;font:inherit}
+.tabs button.on{background:var(--ac);border-color:var(--ac);color:#fff}
+input{width:100%;box-sizing:border-box;font-size:28px;padding:10px;border:1px solid var(--bd);border-radius:10px;background:var(--c);color:var(--fg);text-align:center;margin-bottom:14px}
+.r{display:flex;justify-content:space-between;align-items:center;background:var(--c);border:1px solid var(--bd);border-radius:10px;padding:12px 14px;margin-bottom:8px}
+.r b{font-size:22px}.r small{color:var(--mu)}.r.best{border-color:var(--ac)}
+</style></head><body><main>
+<h1>Tính giờ ngủ</h1><p>Mỗi chu kỳ ngủ khoảng 90 phút, cộng thêm 15 phút để chìm vào giấc.</p>
+<div class="tabs"><button id="b0" class="on">Cần dậy lúc…</button><button id="b1">Đi ngủ lúc…</button></div>
+<input type="time" id="t"><div id="o"></div></main>
+<script>
+const P=n=>String(n).padStart(2,"0"),t=document.getElementById("t"),o=document.getElementById("o");let m=0;
+function fmt(x){x=(x+1440)%1440;return P(Math.floor(x/60))+":"+P(x%60)}
+function go(){const[v,w]=(t.value||"07:00").split(":").map(Number),b=v*60+w;let h="";
+for(const k of [6,5,4,3]){const d=k*90+15,x=m?b+d:b-d,hr=k*1.5;
+h+='<div class="r'+(k>=5?" best":"")+'"><b>'+fmt(x)+'</b><small>'+k+" chu kỳ · "+hr+" giờ ngủ"+(k>=5?" · nên chọn":"")+"</small></div>"}
+o.innerHTML=(m?"Nên thức dậy lúc:":"Nên đi ngủ lúc:")+"<br><br>"+h}
+function set(i){m=i;b0.className=i?"":"on";b1.className=i?"on":"";if(i){const d=new Date();t.value=P(d.getHours())+":"+P(d.getMinutes())}else t.value="07:00";go()}
+b0.onclick=()=>set(0);b1.onclick=()=>set(1);t.oninput=go;set(0);
+</script></body></html>
