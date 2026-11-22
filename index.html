@@ -1,25 +1,154 @@
-<!DOCTYPE html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Tính giờ ngủ</title><style>
-:root{--bg:#fafafa;--fg:#1d1d22;--c:#fff;--bd:#dcdce2;--ac:#5b5bd6;--mu:#6b6b78;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#15151a;--fg:#ececf1;--c:#1f1f27;--bd:#33333d;--ac:#8b8bf0;--mu:#9a9aa8}}
-:root[data-theme="dark"]{--bg:#15151a;--fg:#ececf1;--c:#1f1f27;--bd:#33333d;--ac:#8b8bf0;--mu:#9a9aa8}
-html,body{height:100%;margin:0}body{background:var(--bg);color:var(--fg);font:16px system-ui,sans-serif;display:flex;justify-content:center}
-main{width:100%;max-width:440px;padding:20px 16px}h1{font-size:22px;margin:0 0 4px}p{color:var(--mu);margin:0 0 16px}
-.tabs{display:flex;gap:8px;margin-bottom:14px}.tabs button{flex:1;padding:10px;border:1px solid var(--bd);background:var(--c);color:var(--fg);border-radius:10px;font:inherit}
-.tabs button.on{background:var(--ac);border-color:var(--ac);color:#fff}
-input{width:100%;box-sizing:border-box;font-size:28px;padding:10px;border:1px solid var(--bd);border-radius:10px;background:var(--c);color:var(--fg);text-align:center;margin-bottom:14px}
-.r{display:flex;justify-content:space-between;align-items:center;background:var(--c);border:1px solid var(--bd);border-radius:10px;padding:12px 14px;margin-bottom:8px}
-.r b{font-size:22px}.r small{color:var(--mu)}.r.best{border-color:var(--ac)}
-</style></head><body><main>
-<h1>Tính giờ ngủ</h1><p>Mỗi chu kỳ ngủ khoảng 90 phút, cộng thêm 15 phút để chìm vào giấc.</p>
-<div class="tabs"><button id="b0" class="on">Cần dậy lúc…</button><button id="b1">Đi ngủ lúc…</button></div>
-<input type="time" id="t"><div id="o"></div></main>
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Giờ ngủ: tính giờ đi ngủ và thức dậy</title>
+<meta name="description" content="Tính giờ đi ngủ hoặc thức dậy theo chu kỳ ngủ 90 phút để tỉnh dậy nhẹ nhàng.">
+<meta name="theme-color" content="#0e1524">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230e1524'/%3E%3Cpath d='M20 6a11 11 0 1 0 6 16A9 9 0 0 1 20 6z' fill='%23f2b66d'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#e9eff8;--ink:#101826;--mu:#52607a;--card:#ffffff;--line:#c9d4e6;--acc:#b05a12;--ring:#c9d4e6;--on:#ffffff;
+  color-scheme:light dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root{--bg:#0e1524;--ink:#f1ead7;--mu:#98a2c0;--card:#17213a;--line:#2a3658;--acc:#f2b66d;--ring:#222d4c;--on:#0e1524}
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.5 "Be Vietnam Pro",system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-text-size-adjust:100%}
+main{max-width:460px;margin:0 auto;padding:22px 18px 40px}
+h1{font-size:28px;line-height:1.15;margin:0 0 6px;font-weight:700;letter-spacing:-.01em}
+h2{font-size:16px;margin:0 0 10px;font-weight:700}
+p{margin:0}
+.lead{color:var(--mu);max-width:34ch}
+button,select,input{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+
+.seg{display:flex;margin:22px 0 14px;border:1px solid var(--line);border-radius:12px;background:var(--card);padding:3px;gap:3px}
+.seg button{flex:1;border:0;background:none;padding:10px 8px;border-radius:9px;cursor:pointer;font-weight:500}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+
+.tm{display:flex;align-items:center;gap:12px;margin-bottom:6px}
+.tm label{flex:1;display:block}
+.tm span{display:block;color:var(--mu);font-size:14px;margin-bottom:2px}
+.tm input{width:100%;font-size:40px;font-weight:700;font-variant-numeric:tabular-nums;border:0;border-bottom:2px solid var(--line);background:none;padding:2px 0 4px;border-radius:0}
+.tm input:focus-visible{outline:none;border-color:var(--acc)}
+.tm button{border:1px solid var(--line);background:var(--card);border-radius:10px;padding:9px 14px;cursor:pointer;white-space:nowrap}
+.tm button[hidden]{display:none}
+
+#dial{display:block;width:100%;max-width:340px;height:auto;margin:6px auto 0}
+#dial text{fill:var(--mu);font-size:10px;text-anchor:middle;dominant-baseline:central;font-family:inherit}
+#dial .big{fill:var(--ink);font-size:25px;font-weight:700}
+#dial .sm{font-size:11px}
+
+.res{margin-top:18px}
+ol{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.row{width:100%;display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:14px;text-align:left;border:1px solid var(--line);background:var(--card);border-radius:14px;padding:12px 16px;cursor:pointer}
+.row[aria-pressed="true"]{border-color:var(--acc);box-shadow:inset 0 0 0 1px var(--acc)}
+.row b{font-size:30px;line-height:1;font-weight:700;font-variant-numeric:tabular-nums}
+.row small{color:var(--mu);font-size:14px;line-height:1.35}
+.row em{font-style:normal;font-size:13px;font-weight:500;color:var(--on);background:var(--acc);border-radius:20px;padding:2px 10px;white-space:nowrap}
+.row em.q{background:none;color:var(--mu);border:1px solid var(--line)}
+
+.set{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:16px;color:var(--mu);font-size:14px}
+.set select{border:1px solid var(--line);background:var(--card);border-radius:10px;padding:8px 10px}
+.note{margin-top:14px;color:var(--mu);font-size:14px;max-width:48ch}
+
+@media (min-width:820px){
+  main{max-width:920px;display:grid;grid-template-columns:400px 1fr;column-gap:56px;align-items:start;padding-top:44px}
+  header{grid-column:1/-1}
+  .res{margin-top:22px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>Giờ ngủ</h1>
+    <p class="lead">Chọn giờ thức dậy hoặc giờ đi ngủ, trang sẽ gợi ý các mốc để bạn dậy giữa hai chu kỳ ngủ.</p>
+  </header>
+
+  <section aria-label="Nhập giờ">
+    <div class="seg" role="group" aria-label="Chế độ tính">
+      <button id="m0" aria-pressed="true">Cần dậy lúc</button>
+      <button id="m1" aria-pressed="false">Đi ngủ lúc</button>
+    </div>
+    <div class="tm">
+      <label><span id="tl">Giờ thức dậy</span><input type="time" id="t" value="07:00"></label>
+      <button id="now" hidden>Bây giờ</button>
+    </div>
+    <svg id="dial" viewBox="0 0 240 240" role="img" aria-label="Biểu đồ giờ ngủ trong ngày"></svg>
+  </section>
+
+  <section class="res" aria-live="polite">
+    <h2 id="rt">Nên đi ngủ lúc</h2>
+    <ol id="ol"></ol>
+    <div class="set">
+      <label for="lat">Thời gian để chìm vào giấc</label>
+      <select id="lat">
+        <option value="5">5 phút</option><option value="10">10 phút</option><option value="15">15 phút</option>
+        <option value="20">20 phút</option><option value="30">30 phút</option>
+      </select>
+    </div>
+    <p class="note">Mỗi chu kỳ ngủ kéo dài khoảng 90 phút. Người lớn thường cần 7 đến 9 giờ, tương ứng 5 hoặc 6 chu kỳ.</p>
+  </section>
+</main>
+
 <script>
-const P=n=>String(n).padStart(2,"0"),t=document.getElementById("t"),o=document.getElementById("o");let m=0;
-function fmt(x){x=(x+1440)%1440;return P(Math.floor(x/60))+":"+P(x%60)}
-function go(){const[v,w]=(t.value||"07:00").split(":").map(Number),b=v*60+w;let h="";
-for(const k of [6,5,4,3]){const d=k*90+15,x=m?b+d:b-d,hr=k*1.5;
-h+='<div class="r'+(k>=5?" best":"")+'"><b>'+fmt(x)+'</b><small>'+k+" chu kỳ · "+hr+" giờ ngủ"+(k>=5?" · nên chọn":"")+"</small></div>"}
-o.innerHTML=(m?"Nên thức dậy lúc:":"Nên đi ngủ lúc:")+"<br><br>"+h}
-function set(i){m=i;b0.className=i?"":"on";b1.className=i?"on":"";if(i){const d=new Date();t.value=P(d.getHours())+":"+P(d.getMinutes())}else t.value="07:00";go()}
-b0.onclick=()=>set(0);b1.onclick=()=>set(1);t.oninput=go;set(0);
-</script></body></html>
+const $=id=>document.getElementById(id),P=n=>String(n).padStart(2,"0");
+const st={m:0,t:["07:00",""],lat:15,k:5};
+try{const s=JSON.parse(localStorage.getItem("gn")||"{}");if(s.t&&s.t.length==2)Object.assign(st,s)}catch(e){}
+const clock=x=>{x=((x%1440)+1440)%1440;return P(x/60|0)+":"+P(x%60)};
+const nowStr=()=>{const d=new Date();return P(d.getHours())+":"+P(d.getMinutes())};
+const dur=k=>{const m=k*90,h=m/60|0,r=m%60;return h+" giờ"+(r?" "+r:"")};
+const save=()=>{try{localStorage.setItem("gn",JSON.stringify(st))}catch(e){}};
+
+const C=120,R=92,TAU=Math.PI*2;
+const ang=m=>(((m%1440)+1440)%1440)/1440*TAU-Math.PI/2;
+const pt=(m,r)=>[C+r*Math.cos(ang(m)),C+r*Math.sin(ang(m))];
+const arc=(a,b,r)=>{const[x1,y1]=pt(a,r),[x2,y2]=pt(b,r),sp=(((b-a)%1440)+1440)%1440;return"M"+x1.toFixed(2)+" "+y1.toFixed(2)+"A"+r+" "+r+" 0 "+(sp>720?1:0)+" 1 "+x2.toFixed(2)+" "+y2.toFixed(2)};
+
+function dial(bed,wake,k,L){
+  let g='<circle cx="'+C+'" cy="'+C+'" r="'+R+'" fill="none" stroke="var(--ring)" stroke-width="16"/>';
+  [0,360,720,1080].forEach((m,i)=>{const[x,y]=pt(m,R+19);g+='<text x="'+x.toFixed(1)+'" y="'+y.toFixed(1)+'">'+(i*6)+'h</text>'});
+  g+='<path d="'+arc(bed,bed+L,R)+'" fill="none" stroke="var(--acc)" stroke-width="16" stroke-linecap="butt" opacity=".35"/>';
+  g+='<path d="'+arc(bed+L,wake,R)+'" fill="none" stroke="var(--acc)" stroke-width="16" stroke-linecap="butt"/>';
+  for(let j=1;j<k;j++){const[x,y]=pt(bed+L+j*90,R);g+='<circle cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="2.4" fill="var(--bg)"/>'}
+  const[mx,my]=pt(bed,R),[sx,sy]=pt(wake,R);
+  g+='<g transform="translate('+mx.toFixed(1)+' '+my.toFixed(1)+')"><circle r="13" fill="var(--bg)" stroke="var(--acc)" stroke-width="2"/><path d="M2.5-7a7.5 7.5 0 1 0 5 9.5 6 6 0 0 1-5-9.5z" fill="var(--acc)" transform="translate(-2 0)"/></g>';
+  g+='<g transform="translate('+sx.toFixed(1)+' '+sy.toFixed(1)+')"><circle r="13" fill="var(--bg)" stroke="var(--acc)" stroke-width="2"/><circle r="4" fill="var(--acc)"/>';
+  for(let i=0;i<8;i++){const a=i*Math.PI/4;g+='<line x1="'+(6.3*Math.cos(a)).toFixed(1)+'" y1="'+(6.3*Math.sin(a)).toFixed(1)+'" x2="'+(9*Math.cos(a)).toFixed(1)+'" y2="'+(9*Math.sin(a)).toFixed(1)+'" stroke="var(--acc)" stroke-width="1.6" stroke-linecap="round"/>'}
+  g+='</g>';
+  g+='<text class="big" x="'+C+'" y="'+(C-8)+'">'+dur(k)+'</text><text class="sm" x="'+C+'" y="'+(C+16)+'">'+k+' chu kỳ</text>';
+  $("dial").innerHTML=g;
+}
+
+function go(){
+  const v=st.t[st.m]||(st.m?nowStr():"07:00"),[h,m]=v.split(":").map(Number),base=(h||0)*60+(m||0),L=+st.lat;
+  $("t").value=v;$("lat").value=String(L);
+  $("m0").setAttribute("aria-pressed",st.m==0);$("m1").setAttribute("aria-pressed",st.m==1);
+  $("tl").textContent=st.m?"Giờ đi ngủ":"Giờ thức dậy";$("now").hidden=!st.m;
+  $("rt").textContent=st.m?"Nên thức dậy lúc":"Nên đi ngủ lúc";
+  const rows=[6,5,4,3].map(k=>{const d=k*90+L;return{k,t:st.m?base+d:base-d,bed:st.m?base:base-d,wake:st.m?base+d:base}});
+  $("ol").innerHTML=rows.map(r=>'<li><button class="row" data-k="'+r.k+'" aria-pressed="'+(r.k==st.k)+'"><b>'+clock(r.t)+'</b><small>'+r.k+' chu kỳ, '+dur(r.k)+'</small>'+(r.k>=5?'<em>Nên chọn</em>':'<em class="q">'+(r.k==4?'Hơi ngắn':'Ngắn')+'</em>')+'</button></li>').join("");
+  const s=rows.find(r=>r.k==st.k)||rows[1];
+  dial(s.bed,s.wake,s.k,L);
+  save();
+}
+$("m0").onclick=()=>{st.m=0;go()};
+$("m1").onclick=()=>{st.m=1;if(!st.t[1])st.t[1]=nowStr();go()};
+$("t").oninput=e=>{if(e.target.value){st.t[st.m]=e.target.value;go()}};
+$("now").onclick=()=>{st.t[1]=nowStr();go()};
+$("lat").onchange=e=>{st.lat=+e.target.value;go()};
+$("ol").onclick=e=>{const b=e.target.closest("[data-k]");if(b){st.k=+b.dataset.k;go()}};
+if(st.m==1)st.t[1]=nowStr();
+go();
+</script>
+</body>
+</html>
