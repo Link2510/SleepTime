@@ -1,0 +1,15 @@
+{
+  "projects": {
+    "default": "sleep-time-tool"
+  },
+  "targets": {
+    "sleep-time-tool": {
+      "hosting": {
+        "pphtsleeptime": [
+          "pphtsleeptime"
+        ]
+      }
+    }
+  },
+  "etags": {}
+}
