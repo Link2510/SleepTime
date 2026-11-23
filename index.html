@@ -53,8 +53,28 @@ ol{list-style:none;margin:0;padding:0;display:grid;gap:8px}
 .row b{font-size:30px;line-height:1;font-weight:700;font-variant-numeric:tabular-nums}
 .row small{color:var(--mu);font-size:14px;line-height:1.35}
 .row em{font-style:normal;font-size:13px;font-weight:500;color:var(--on);background:var(--acc);border-radius:20px;padding:2px 10px;white-space:nowrap}
+.row .nt{grid-column:1/-1;font-size:13px;color:var(--mu);margin-top:-6px}
 .row em.q{background:none;color:var(--mu);border:1px solid var(--line)}
 
+.al{margin-top:16px;border:1px solid var(--line);background:var(--card);border-radius:14px;padding:14px 16px}
+.ah{display:flex;justify-content:space-between;align-items:baseline;color:var(--mu);font-size:14px}
+.ah b{font-size:28px;line-height:1;color:var(--ink);font-variant-numeric:tabular-nums}
+.ab{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.btn{display:inline-block;border:1px solid var(--line);background:var(--card);border-radius:10px;padding:10px 14px;cursor:pointer;text-decoration:none;color:var(--ink);font:inherit}
+.btn.pri{background:var(--acc);border-color:var(--acc);color:var(--on);font-weight:500}
+details{margin-top:12px;font-size:14px;color:var(--mu)}details summary{cursor:pointer}details ol{margin:8px 0 0;padding-left:20px}details p{margin-top:6px}
+dialog{border:0;padding:0;border-radius:18px;width:min(420px,calc(100vw - 32px));background:var(--card);color:var(--ink);box-shadow:0 20px 60px rgba(0,0,0,.45)}
+dialog[open]{animation:dgin .22s ease-out}
+dialog::backdrop{background:rgba(5,9,18,.62);backdrop-filter:blur(3px)}
+@keyframes dgin{from{opacity:0;transform:translateY(10px) scale(.97)}}
+.dgi{position:relative;margin:0;padding:24px 20px 20px}
+.dgi h2{font-size:20px;margin:0 28px 6px 0}.dgi .mu{color:var(--mu);font-size:15px}.dgi .s{font-size:13px;margin-top:4px}
+.x{position:absolute;top:8px;right:8px;border:0;background:none;font-size:18px;line-height:1;cursor:pointer;color:var(--mu);padding:10px;border-radius:10px}
+ol.st{list-style:none;counter-reset:s;padding:0;margin:16px 0 10px;display:grid;gap:14px}
+ol.st li{counter-increment:s;display:grid;grid-template-columns:30px 1fr;gap:12px;align-items:start}
+ol.st li::before{content:counter(s);width:30px;height:30px;border-radius:50%;background:var(--acc);color:var(--on);display:flex;align-items:center;justify-content:center;font-weight:700}
+.dgb{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}.dgb .btn{flex:1;text-align:center;white-space:nowrap}
+.hint{margin-top:10px;font-size:13px;color:var(--mu)}
 .set{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:16px;color:var(--mu);font-size:14px}
 .set select{border:1px solid var(--line);background:var(--card);border-radius:10px;padding:8px 10px}
 .note{margin-top:14px;color:var(--mu);font-size:14px;max-width:48ch}
@@ -89,6 +109,11 @@ ol{list-style:none;margin:0;padding:0;display:grid;gap:8px}
   <section class="res" aria-live="polite">
     <h2 id="rt">Nên đi ngủ lúc</h2>
     <ol id="ol"></ol>
+    <div class="al">
+      <div class="ah"><span>Báo thức thức dậy</span><b id="at">07:00</b></div>
+      <div class="ab" id="ab"></div>
+      <p class="hint">Báo thức của máy kêu to hơn thông báo từ lịch.</p>
+    </div>
     <div class="set">
       <label for="lat">Thời gian để chìm vào giấc</label>
       <select id="lat">
@@ -99,6 +124,21 @@ ol{list-style:none;margin:0;padding:0;display:grid;gap:8px}
     <p class="note">Mỗi chu kỳ ngủ kéo dài khoảng 90 phút. Người lớn thường cần 7 đến 9 giờ, tương ứng 5 hoặc 6 chu kỳ.</p>
   </section>
 </main>
+
+<dialog id="dg" aria-labelledby="dgt">
+  <form method="dialog" class="dgi">
+    <button class="x" value="close" aria-label="Đóng">✕</button>
+    <h2 id="dgt">Cài một lần cho iPhone</h2>
+    <p class="mu">iPhone không cho trang web tự đặt báo thức, nên cần một phím tắt nhỏ. Bạn chỉ làm một lần.</p>
+    <ol class="st">
+      <li><span>Mở app <b>Phím tắt</b>, bấm dấu <b>+</b> để tạo phím tắt mới và đặt tên đúng là <b>Báo thức giờ ngủ</b>.</span></li>
+      <li><span>Thêm hành động <b>Lấy ngày từ đầu vào</b>, rồi thêm hành động <b>Tạo báo thức</b> và chọn thời gian là ngày vừa lấy.</span></li>
+      <li><span>Bấm <b>Xong</b>, quay lại trang này và bấm <b>Tôi đã cài xong</b>. Lần đầu, iPhone sẽ hỏi cho phép chạy phím tắt.</span></li>
+    </ol>
+    <p class="mu s">Tên hành động có thể hơi khác tùy bản iOS.</p>
+    <div class="dgb"><a class="btn" href="shortcuts://">Mở app Phím tắt</a><button class="btn pri" id="dok" value="ok">Tôi đã cài xong</button></div>
+  </form>
+</dialog>
 
 <script>
 const $=id=>document.getElementById(id),P=n=>String(n).padStart(2,"0");
@@ -129,6 +169,24 @@ function dial(bed,wake,k,L){
   $("dial").innerHTML=g;
 }
 
+
+const UA=navigator.userAgent,AND=/Android/i.test(UA),IOS=/iPhone|iPad|iPod/i.test(UA)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1),SC="Báo thức giờ ngủ";
+function ics(hh,mm){const z=n=>String(n).padStart(2,"0"),f=x=>x.getFullYear()+z(x.getMonth()+1)+z(x.getDate())+"T"+z(x.getHours())+z(x.getMinutes())+"00";
+  const d=new Date();d.setHours(hh,mm,0,0);if(d<=new Date())d.setDate(d.getDate()+1);
+  const e=new Date(d.getTime()+15*60000),st=new Date().toISOString().replace(/[-:]/g,"").slice(0,15)+"Z";
+  const s=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Gio ngu//VI","BEGIN:VEVENT","UID:"+Date.now()+"@gio-ngu","DTSTAMP:"+st,"DTSTART:"+f(d),"DTEND:"+f(e),"SUMMARY:Thức dậy","BEGIN:VALARM","ACTION:DISPLAY","DESCRIPTION:Thức dậy","TRIGGER:-PT0M","END:VALARM","END:VEVENT","END:VCALENDAR"].join("\r\n");
+  const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([s],{type:"text/calendar;charset=utf-8"}));a.download="thuc-day.ics";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),3000)}
+function alarm(W){const w=((W%1440)+1440)%1440,hh=w/60|0,mm=w%60,tx=clock(w);let b="";
+  if(AND)b+='<a class="btn pri" href="intent://#Intent;action=android.intent.action.SET_ALARM;i.android.intent.extra.alarm.HOUR='+hh+';i.android.intent.extra.alarm.MINUTES='+mm+';S.android.intent.extra.alarm.MESSAGE='+encodeURIComponent("Thức dậy")+';end">⏰ Đặt báo thức lúc '+tx+'</a>';
+  if(IOS)b+='<button class="btn pri" id="ia">⏰ Đặt báo thức lúc '+tx+'</button><button class="btn" id="ih">Hướng dẫn cài</button>';
+  b+='<button class="btn" id="ics">📅 Thêm vào lịch</button>';
+  $("at").textContent=tx;$("ab").innerHTML=b;$("ics").onclick=()=>ics(hh,mm);
+  if(IOS){curTx=tx;$("ia").onclick=()=>{let ok=0;try{ok=localStorage.getItem("gnsc")}catch(e){}ok?scGo(tx):$("dg").showModal()};$("ih").onclick=()=>$("dg").showModal()}}
+let curTx="07:00";
+function scGo(tx){location.href="shortcuts://run-shortcut?name="+encodeURIComponent(SC)+"&input=text&text="+tx}
+$("dok").onclick=e=>{e.preventDefault();$("dg").close();try{localStorage.setItem("gnsc","1")}catch(x){}scGo(curTx)};
+$("dg").addEventListener("click",e=>{if(e.target===$("dg"))$("dg").close()});
+
 function go(){
   const v=st.t[st.m]||(st.m?nowStr():"07:00"),[h,m]=v.split(":").map(Number),base=(h||0)*60+(m||0),L=+st.lat;
   $("t").value=v;$("lat").value=String(L);
@@ -136,9 +194,9 @@ function go(){
   $("tl").textContent=st.m?"Giờ đi ngủ":"Giờ thức dậy";$("now").hidden=!st.m;
   $("rt").textContent=st.m?"Nên thức dậy lúc":"Nên đi ngủ lúc";
   const rows=[6,5,4,3].map(k=>{const d=k*90+L;return{k,t:st.m?base+d:base-d,bed:st.m?base:base-d,wake:st.m?base+d:base}});
-  $("ol").innerHTML=rows.map(r=>'<li><button class="row" data-k="'+r.k+'" aria-pressed="'+(r.k==st.k)+'"><b>'+clock(r.t)+'</b><small>'+r.k+' chu kỳ, '+dur(r.k)+'</small>'+(r.k>=5?'<em>Nên chọn</em>':'<em class="q">'+(r.k==4?'Hơi ngắn':'Ngắn')+'</em>')+'</button></li>').join("");
+  $("ol").innerHTML=rows.map(r=>'<li><button class="row" data-k="'+r.k+'" aria-pressed="'+(r.k==st.k)+'"><b>'+clock(r.t)+'</b><small>'+r.k+' chu kỳ, '+dur(r.k)+'</small>'+(r.k>=5?'<em>Nên chọn</em>':'<em class="q">'+(r.k==4?'Hơi ngắn':'Ngắn')+'</em>')+'<span class="nt">đã gồm '+L+' phút chìm vào giấc</span></button></li>').join("");
   const s=rows.find(r=>r.k==st.k)||rows[1];
-  dial(s.bed,s.wake,s.k,L);
+  dial(s.bed,s.wake,s.k,L);alarm(s.wake);
   save();
 }
 $("m0").onclick=()=>{st.m=0;go()};
